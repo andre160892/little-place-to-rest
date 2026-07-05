@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Little Place to Rest • For Novi</title>
+<style>
+:root{
+--bg:#f4efe7;--panel:rgba(255,255,255,.75);--accent:#7f9d82;--text:#3f433f;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:linear-gradient(180deg,#f8f3ea,#ece4d7);overflow-x:hidden;color:var(--text)}
+body:before{content:"";position:fixed;inset:0;background:
+radial-gradient(circle at 20% 20%,rgba(255,255,255,.6),transparent 30%),
+radial-gradient(circle at 80% 10%,rgba(255,255,255,.4),transparent 25%);
+pointer-events:none}
+header{text-align:center;padding:50px 20px}
+h1{margin:0;font-size:3rem}
+.sub{opacity:.75}
+nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;max-width:1100px;margin:0 auto;padding:20px}
+.room{backdrop-filter:blur(8px);background:var(--panel);border-radius:24px;padding:22px;box-shadow:0 15px 35px rgba(0,0,0,.08)}
+button{border:none;background:var(--accent);color:#fff;padding:10px 16px;border-radius:12px;cursor:pointer}
+textarea{width:100%;min-height:140px;border-radius:12px;padding:10px}
+canvas{background:#fff;border-radius:12px;border:1px solid #ddd;touch-action:none}
+#stars{position:fixed;inset:0;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;background:white;border-radius:50%;animation:twinkle 3s infinite}
+@keyframes twinkle{50%{opacity:.2;transform:scale(.5)}}
+.breathe{width:120px;height:120px;border-radius:50%;background:#b7d0b8;margin:auto;animation:breathe 8s infinite}
+@keyframes breathe{
+0%,100%{transform:scale(.8)}
+50%{transform:scale(1.2)}
+}
+.envelope{background:#f5f0e7;padding:10px;border-radius:10px;margin:8px 0;cursor:pointer}
+.small{font-size:.9rem;opacity:.7}
+footer{text-align:center;padding:40px}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<header>
+<h1>🤍 A Little Place to Rest</h1>
+<div class="sub">For Novi • Whenever life becomes too loud, come here.</div>
+<h3 id="affirmation"></h3>
+</header>
+
+<nav>
+
+<section class="room">
+<h2>📖 Daily Bread</h2>
+<h3 id="ref"></h3>
+<p id="verse"></p>
+<p id="reflection"></p>
+<button onclick="nextVerse()">Next Devotion</button>
+</section>
+
+<section class="room">
+<h2>🎨 Quiet Corner</h2>
+<canvas id="paint" width="320" height="220"></canvas><br><br>
+<button onclick="ctx.clearRect(0,0,paint.width,paint.height)">Clear</button>
+<p class="small">Draw whatever your heart cannot explain.</p>
+</section>
+
+<section class="room">
+<h2>💌 Open When...</h2>
+<div class="envelope" onclick="letter('hard')">Today was hard</div>
+<div class="envelope" onclick="letter('cry')">You want to cry</div>
+<div class="envelope" onclick="letter('miss')">You miss me</div>
+<div class="envelope" onclick="letter('enough')">You don't feel enough</div>
+<p id="letterBox"></p>
+</section>
+
+<section class="room">
+<h2>🌅 Hope Room</h2>
+<textarea id="journal" placeholder="Three things you're grateful for..."></textarea><br><br>
+<button onclick="saveJournal()">Save</button>
+<div id="saved"></div>
+</section>
+
+<section class="room">
+<h2>🫧 Breathe</h2>
+<div class="breathe"></div>
+<p style="text-align:center">
+Breathe in (4)<br>Hold (4)<br>Breathe out (6)
+</p>
+</section>
+
+<section class="room">
+<h2>🙏 Prayer</h2>
+<textarea id="prayer" placeholder="Dear God..."></textarea><br><br>
+<button onclick="localStorage.prayer=prayer.value;msg('Prayer saved.')">Save Prayer</button>
+</section>
+
+<section class="room">
+<h2>🌸 Memory Jar</h2>
+<input id="memory" style="width:100%;padding:10px;border-radius:10px" placeholder="One beautiful thing today"><br><br>
+<button onclick="addMemory()">Add</button>
+<ul id="memories"></ul>
+</section>
+
+<section class="room">
+<h2>☕ From Andre</h2>
+<p>Dear Novi,</p>
+<p>
+You don't have to earn rest.
+You don't have to prove your worth.
+You don't have to carry every burden perfectly.
+I'm proud of the woman you're becoming, and I'm even more grateful that God walks beside you every step of the way.
+Whenever the world feels too heavy, let this little place remind you that you're deeply loved.
+</p>
+</section>
+
+</nav>
+
+<footer>Made with love, faith, and hope. 🤍</footer>
+
+<script>
+for(let i=0;i<80;i++){
+let s=document.createElement('div');
+s.className='star';
+s.style.left=Math.random()*100+'vw';
+s.style.top=Math.random()*100+'vh';
+s.style.animationDelay=Math.random()*4+'s';
+document.getElementById('stars').appendChild(s);
+}
+const verses=[
+["Matthew 11:28","Come to me, all who are weary and burdened, and I will give you rest.","You were never meant to carry everything alone."],
+["Isaiah 41:10","Do not fear, for I am with you.","God stays even when strength leaves."],
+["Psalm 46:10","Be still and know that I am God.","Stillness is not weakness."],
+["Romans 8:28","God works all things together for good.","Even difficult seasons have purpose."]
+];
+let idx=-1;
+function nextVerse(){idx=(idx+1)%verses.length;ref.textContent=verses[idx][0];verse.textContent=verses[idx][1];reflection.textContent=verses[idx][2]}
+nextVerse();
+const aff=["I'm proud of you.","Drink some water.","You are enough.","God is near.","Slow down. Breathe.","You're deeply loved."];
+affirmation.textContent=aff[Math.floor(Math.random()*aff.length)];
+const letters={
+hard:"Today does not define your future. Rest first. Tomorrow can wait.",
+cry:"Even Jesus wept. Tears are not failure.",
+miss:"Distance never changes my choice. I'd still choose you.",
+enough:"You are loved before you achieve anything."
+};
+function letter(k){letterBox.textContent=letters[k]}
+journal.value=localStorage.journal||"";
+prayer.value=localStorage.prayer||"";
+function saveJournal(){localStorage.journal=journal.value;msg("Journal saved 🤍")}
+function msg(t){saved.textContent=t;setTimeout(()=>saved.textContent="",2500)}
+const memories=JSON.parse(localStorage.memories||"[]");
+function render(){memoriesEl.innerHTML="";}
+const memoriesEl=document.getElementById("memories");
+function redraw(){memoriesEl.innerHTML="";memories.forEach(m=>{let li=document.createElement("li");li.textContent=m;memoriesEl.appendChild(li)})}
+redraw();
+function addMemory(){
+if(!memory.value)return;
+memories.push(memory.value);
+localStorage.memories=JSON.stringify(memories);
+memory.value="";
+redraw();
+}
+const paint=document.getElementById("paint");
+const ctx=paint.getContext("2d");
+let d=false;
+function p(e){let r=paint.getBoundingClientRect();let t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
+paint.onmousedown=e=>{d=true;let a=p(e);ctx.beginPath();ctx.moveTo(a.x,a.y)}
+paint.onmousemove=e=>{if(!d)return;let a=p(e);ctx.lineTo(a.x,a.y);ctx.lineWidth=3;ctx.lineCap="round";ctx.stroke()}
+window.onmouseup=()=>d=false;
+paint.ontouchstart=e=>{d=true;let a=p(e);ctx.beginPath();ctx.moveTo(a.x,a.y)}
+paint.ontouchmove=e=>{e.preventDefault();if(!d)return;let a=p(e);ctx.lineTo(a.x,a.y);ctx.lineWidth=3;ctx.stroke()}
+paint.ontouchend=()=>d=false;
+let secret=0;
+document.body.onclick=()=>{secret++;if(secret==25){alert("✨ Secret unlocked\n\nAndre loves you.\nGod loves you even more.");secret=0;}}
+</script>
+</body>
+</html>
