@@ -66,6 +66,10 @@ footer{text-align:center;padding:40px}
 <div class="envelope" onclick="letter('cry')">You want to cry</div>
 <div class="envelope" onclick="letter('miss')">You miss me</div>
 <div class="envelope" onclick="letter('enough')">You don't feel enough</div>
+<div class="envelope" onclick="letter('afraid')">You're afraid</div>
+<div class="envelope" onclick="letter('lonely')">You feel lonely</div>
+<div class="envelope" onclick="letter('tired')">You're exhausted</div>
+<div class="envelope" onclick="letter('hope')">You need hope</div>
 <p id="letterBox"></p>
 </section>
 
@@ -126,14 +130,46 @@ const verses=[
 ["Matthew 11:28","Come to me, all who are weary and burdened, and I will give you rest.","You were never meant to carry everything alone."],
 ["Isaiah 41:10","Do not fear, for I am with you.","God stays even when strength leaves."],
 ["Psalm 46:10","Be still and know that I am God.","Stillness is not weakness."],
-["Romans 8:28","God works all things together for good.","Even difficult seasons have purpose."]
+["Romans 8:28","God works all things together for good.","Even difficult seasons have purpose."],
+["Lamentations 3:22-23","His mercies are new every morning.","Today is not yesterday. Grace begins again."],
+["Psalm 23:1","The Lord is my shepherd; I shall not want.","You are guided even when the path feels unclear."],
+["Joshua 1:9","Be strong and courageous.","Courage is walking while afraid."],
+["John 14:27","Peace I leave with you; my peace I give you.","God's peace is deeper than circumstances."],
+["Philippians 4:6-7","Do not be anxious about anything.","Prayer is where anxious hearts become peaceful."],
+["Psalm 34:18","The Lord is close to the brokenhearted.","You are never abandoned in your pain."],
+["2 Corinthians 12:9","My grace is sufficient for you.","Weakness is where grace shines brightest."],
+["Hebrews 13:5","I will never leave you nor forsake you.","God's presence is constant."]
 ];
 let idx=-1;
 function nextVerse(){idx=(idx+1)%verses.length;ref.textContent=verses[idx][0];verse.textContent=verses[idx][1];reflection.textContent=verses[idx][2]}
 nextVerse();
-const aff=["I'm proud of you.","Drink some water.","You are enough.","God is near.","Slow down. Breathe.","You're deeply loved."];
+const aff=[
+"I'm proud of you.",
+"Drink some water.",
+"You are enough.",
+"God is near.",
+"Slow down. Breathe.",
+"You're deeply loved.",
+"You survived every hard day so far.",
+"Rest is productive too.",
+"God hasn't forgotten your name.",
+"You don't have to have it all figured out.",
+"One gentle step is enough today.",
+"The future is still full of hope.",
+"You're safe here.",
+"Take your time. Healing is not a race."
+];
 affirmation.textContent=aff[Math.floor(Math.random()*aff.length)];
 const letters={
+hard:"Today does not define your future. Rest first. Tomorrow can wait.",
+cry:"Even Jesus wept. Tears are not failure. Heaven counts every tear you hide.",
+miss:"Distance never changes my choice. I'd still choose you. Love doesn't disappear because miles exist.",
+enough:"You are loved before you achieve anything. Your value has never depended on performance.",
+afraid:"You don't need to carry tomorrow tonight. God is already there waiting for you.",
+lonely:"Loneliness whispers lies. Love whispers truth. You are seen, known and deeply loved.",
+tired:"You don't always need to be strong. Sit, breathe, and let God hold what you can't.",
+hope:"The chapter you're living isn't the ending. Beautiful things still have your name on them.",
+
 hard:"Today does not define your future. Rest first. Tomorrow can wait.",
 cry:"Even Jesus wept. Tears are not failure.",
 miss:"Distance never changes my choice. I'd still choose you.",
