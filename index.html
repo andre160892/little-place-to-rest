@@ -33,14 +33,53 @@ canvas{background:#fff;border-radius:12px;border:1px solid #ddd;touch-action:non
 .envelope{background:#f5f0e7;padding:10px;border-radius:10px;margin:8px 0;cursor:pointer}
 .small{font-size:.9rem;opacity:.7}
 footer{text-align:center;padding:40px}
+
+.hero{
+max-width:900px;margin:20px auto 40px;
+background:rgba(255,255,255,.45);
+backdrop-filter:blur(14px);
+padding:30px;border-radius:28px;
+box-shadow:0 20px 50px rgba(0,0,0,.08);
+text-align:center;
+}
+.hero h2{margin:0;font-size:2rem}
+.hero p{opacity:.8}
+.room{transition:.35s ease}
+.room:hover{transform:translateY(-6px) scale(1.02)}
+
+
+.room h2{display:flex;align-items:center;gap:8px}
+button{transition:all .25s}
+button:hover{transform:translateY(-2px)}
+
 </style>
 </head>
 <body>
+
+<div id="landing" style="position:fixed;inset:0;background:linear-gradient(180deg,#f8f3ea,#e8ddd0);display:flex;align-items:center;justify-content:center;z-index:9999;">
+<div style="text-align:center;max-width:600px;padding:30px">
+<h1>🤍 A Little Place to Rest</h1>
+<p style="font-size:1.1rem;opacity:.8">Some days don't need answers.<br>They just need somewhere safe.</p>
+<button onclick="enterHome()" style="margin-top:20px;font-size:1rem;padding:14px 28px">Enter</button>
+</div>
+</div>
+
 <div id="stars"></div>
 <header>
 <h1>🤍 A Little Place to Rest</h1>
-<div class="sub">For Novi • Whenever life becomes too loud, come here.</div>
-<h3 id="affirmation"></h3>
+<div class="sub">For Novi • A quiet little home for the days your heart needs to rest.</div>
+<h3 id="greeting"></h3><h3 id="affirmation"></h3>
+
+<section class="hero">
+<h2 id="welcomeTitle">🌿 Welcome Home</h2>
+<p id="coffeeMsg"></p>
+<button onclick="window.scrollTo({top:document.querySelector('nav').offsetTop,behavior:'smooth'})">Enter Your Safe Place</button>
+</section>
+
+<div style="max-width:700px;margin:20px auto;padding:18px;background:rgba(255,255,255,.45);border-radius:20px;text-align:center">
+<h3>✨ Today's Gentle Reminder</h3>
+<p id="gentleQuote"></p>
+</div>
 </header>
 
 <nav>
@@ -51,6 +90,13 @@ footer{text-align:center;padding:40px}
 <p id="verse"></p>
 <p id="reflection"></p>
 <button onclick="nextVerse()">Next Devotion</button>
+<br><br>
+<select onchange="alert('Coming in V7: '+this.value+' verses!')" style="padding:8px;border-radius:10px">
+<option>Browse by Topic</option>
+<option>Peace</option>
+<option>Hope</option>
+<option>Strength</option>
+</select>
 </section>
 
 <section class="room">
@@ -68,8 +114,9 @@ footer{text-align:center;padding:40px}
 <div class="envelope" onclick="letter('enough')">You don't feel enough</div>
 <div class="envelope" onclick="letter('afraid')">You're afraid</div>
 <div class="envelope" onclick="letter('lonely')">You feel lonely</div>
-<div class="envelope" onclick="letter('tired')">You're exhausted</div>
+<div class="envelope" onclick="letter('sleep')">You can't sleep</div>
 <div class="envelope" onclick="letter('hope')">You need hope</div>
+<div class="envelope" onclick="letter('pray')">You want to pray</div>
 <p id="letterBox"></p>
 </section>
 
@@ -113,9 +160,53 @@ Whenever the world feels too heavy, let this little place remind you that you're
 </p>
 </section>
 
+
+<section class="room">
+<h2>🤍 How is your heart today?</h2>
+<div class="envelope" onclick="mood('anxious')">😰 Anxious</div>
+<div class="envelope" onclick="mood('grateful')">😊 Grateful</div>
+<div class="envelope" onclick="mood('tired')">😴 Tired</div>
+<div class="envelope" onclick="mood('hopeful')">🌤 Hopeful</div>
+<p id="moodBox"></p>
+</section>
+
+
+<section class="room">
+<h2>🎵 Peace Sounds</h2>
+<p>Choose a background while you pray or rest.</p>
+<button onclick="playTone(220)">🌧 Rain Mood</button>
+<button onclick="playTone(330)">🌊 Ocean Mood</button>
+<button onclick="playTone(440)">🌲 Forest Mood</button>
+<p class="small">A gentle placeholder for V8 where real ambient audio will be added.</p>
+</section>
+
+
+<section class="room">
+<h2>🌅 Atmosphere</h2>
+<p>Choose a peaceful background.</p>
+<button onclick="setTheme('morning')">☀️ Morning</button>
+<button onclick="setTheme('sunset')">🌇 Sunset</button>
+<button onclick="setTheme('night')">🌙 Night</button>
+<button onclick="setTheme('forest')">🌿 Forest</button>
+<p class="small">Your choice is remembered for next time.</p>
+</section>
+
+
+<section class="room">
+<h2>🕯 Lighthouse</h2>
+<p>One gentle reminder, once each visit.</p>
+<div id="lighthouseCard" style="padding:14px;background:#fff;border-radius:14px;font-style:italic"></div>
+<button onclick="newLight()">Another Gentle Reminder</button>
+</section>
+
 </nav>
 
-<footer>Made with love, faith, and hope. 🤍</footer>
+<footer>
+<h3>🤍 This little place will always be here.</h3>
+<p>No matter how heavy today feels.</p>
+<p>God hasn't forgotten you.<br>Neither have I.</p>
+<p><strong>— Andre</strong></p>
+</footer>
 
 <script>
 for(let i=0;i<80;i++){
@@ -130,51 +221,72 @@ const verses=[
 ["Matthew 11:28","Come to me, all who are weary and burdened, and I will give you rest.","You were never meant to carry everything alone."],
 ["Isaiah 41:10","Do not fear, for I am with you.","God stays even when strength leaves."],
 ["Psalm 46:10","Be still and know that I am God.","Stillness is not weakness."],
-["Romans 8:28","God works all things together for good.","Even difficult seasons have purpose."],
-["Lamentations 3:22-23","His mercies are new every morning.","Today is not yesterday. Grace begins again."],
-["Psalm 23:1","The Lord is my shepherd; I shall not want.","You are guided even when the path feels unclear."],
-["Joshua 1:9","Be strong and courageous.","Courage is walking while afraid."],
-["John 14:27","Peace I leave with you; my peace I give you.","God's peace is deeper than circumstances."],
-["Philippians 4:6-7","Do not be anxious about anything.","Prayer is where anxious hearts become peaceful."],
-["Psalm 34:18","The Lord is close to the brokenhearted.","You are never abandoned in your pain."],
-["2 Corinthians 12:9","My grace is sufficient for you.","Weakness is where grace shines brightest."],
-["Hebrews 13:5","I will never leave you nor forsake you.","God's presence is constant."]
+["Romans 8:28","God works all things together for good.","Even difficult seasons have purpose."]
 ];
 let idx=-1;
 function nextVerse(){idx=(idx+1)%verses.length;ref.textContent=verses[idx][0];verse.textContent=verses[idx][1];reflection.textContent=verses[idx][2]}
 nextVerse();
 const aff=[
-"I'm proud of you.",
-"Drink some water.",
-"You are enough.",
-"God is near.",
-"Slow down. Breathe.",
-"You're deeply loved.",
-"You survived every hard day so far.",
+"I'm proud of you.","God is near.","Take a deep breath.",
+"You've survived every difficult day so far.",
 "Rest is productive too.",
-"God hasn't forgotten your name.",
-"You don't have to have it all figured out.",
-"One gentle step is enough today.",
-"The future is still full of hope.",
-"You're safe here.",
-"Take your time. Healing is not a race."
+"Drink some water.",
+"You don't have to carry everything today.",
+"Healing isn't a race.",
+"Grace is enough for today.",
+"You are deeply loved."
 ];
+
+const hr=new Date().getHours();
+let greet="Good Evening 🌙";
+if(hr<5) greet="Good Night ✨";
+else if(hr<12) greet="Good Morning ☀️";
+else if(hr<17) greet="Good Afternoon 🌿";
+document.getElementById("greeting").textContent=greet+", Novi.";
+
 affirmation.textContent=aff[Math.floor(Math.random()*aff.length)];
 const letters={
-hard:"Today does not define your future. Rest first. Tomorrow can wait.",
-cry:"Even Jesus wept. Tears are not failure. Heaven counts every tear you hide.",
-miss:"Distance never changes my choice. I'd still choose you. Love doesn't disappear because miles exist.",
-enough:"You are loved before you achieve anything. Your value has never depended on performance.",
-afraid:"You don't need to carry tomorrow tonight. God is already there waiting for you.",
-lonely:"Loneliness whispers lies. Love whispers truth. You are seen, known and deeply loved.",
-tired:"You don't always need to be strong. Sit, breathe, and let God hold what you can't.",
-hope:"The chapter you're living isn't the ending. Beautiful things still have your name on them.",
-
-hard:"Today does not define your future. Rest first. Tomorrow can wait.",
-cry:"Even Jesus wept. Tears are not failure.",
-miss:"Distance never changes my choice. I'd still choose you.",
-enough:"You are loved before you achieve anything."
+hard:[
+"Today may have been heavy, but it doesn't get the final word. Rest first. Tomorrow can wait.",
+"If all you did today was survive, I'm proud of you.",
+"One difficult chapter never decides the ending."
+],
+cry:[
+"Even Jesus wept. Tears are not failure.",
+"You don't have to apologize for feeling deeply."
+],
+miss:[
+"Distance never changes my choice. I'd still choose you.",
+"I hope this little place reminds you you're never alone."
+],
+enough:[
+"You were loved before you achieved anything.",
+"Your worth has never depended on perfection."
+],
+afraid:[
+"God is already waiting in tomorrow.",
+"Courage isn't the absence of fear. It's taking one more step."
+],
+lonely:[
+"The Lord is close to the brokenhearted.",
+"You are seen, known and loved."
+],
+sleep:[
+"Close your eyes. Breathe slowly. God is watching over you.",
+"Let tomorrow stay in tomorrow."
+],
+hope:[
+"This season isn't the end of your story.",
+"Light always returns after the longest night."
+],
+pray:[
+"You don't need perfect words. Just an honest heart."
+]
 };
+function letter(k){
+ const arr=letters[k];
+ letterBox.textContent=arr[Math.floor(Math.random()*arr.length)];
+}
 function letter(k){letterBox.textContent=letters[k]}
 journal.value=localStorage.journal||"";
 prayer.value=localStorage.prayer||"";
@@ -204,6 +316,116 @@ paint.ontouchmove=e=>{e.preventDefault();if(!d)return;let a=p(e);ctx.lineTo(a.x,
 paint.ontouchend=()=>d=false;
 let secret=0;
 document.body.onclick=()=>{secret++;if(secret==25){alert("✨ Secret unlocked\n\nAndre loves you.\nGod loves you even more.");secret=0;}}
+
+const coffee=[
+"I hope today is a little kinder than yesterday.",
+"I'm proud of the woman you're becoming.",
+"Drink some water. Your body matters too.",
+"Grace is enough for today.",
+"You never have to earn rest.",
+"One quiet prayer can change a whole day.",
+"If today feels heavy, let me carry you in prayer.",
+"God sees what nobody else notices.",
+"You are deeply loved.",
+"Thank you for coming back here today."
+];
+document.getElementById("coffeeMsg").textContent=
+coffee[Math.floor(Math.random()*coffee.length)];
+
+
+const moods={
+anxious:["Take one deep breath. God is already where you're worried about going.","You don't have to solve tomorrow tonight."],
+grateful:["Hold onto today's small blessings. They matter.","Gratitude quietly changes the heart."],
+tired:["Rest is not weakness. It's wisdom.","Even strong hearts need quiet evenings."],
+hopeful:["Keep walking. Hope grows one step at a time.","Beautiful things often begin quietly."]
+};
+function mood(k){
+ const arr=moods[k];
+ document.getElementById('moodBox').textContent=arr[Math.floor(Math.random()*arr.length)];
+}
+
+
+function enterHome(){
+ const l=document.getElementById('landing');
+ l.style.transition='opacity .8s';
+ l.style.opacity='0';
+ setTimeout(()=>l.remove(),800);
+}
+const versesTopics={
+Peace:["John 14:27","Philippians 4:6-7"],
+Hope:["Romans 15:13","Jeremiah 29:11"],
+Strength:["Isaiah 40:31","Joshua 1:9"]
+};
+
+
+let audioCtx;
+function playTone(freq){
+ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+ const osc=audioCtx.createOscillator();
+ const gain=audioCtx.createGain();
+ osc.frequency.value=freq;
+ osc.type='sine';
+ gain.gain.value=0.02;
+ osc.connect(gain);
+ gain.connect(audioCtx.destination);
+ osc.start();
+ setTimeout(()=>{osc.stop();},700);
+}
+
+
+const gentle=[
+"Peace doesn't always remove the storm; sometimes it calms the heart within it.",
+"You don't have to be perfect to be deeply loved.",
+"Leave what is heavy here for a little while.",
+"God isn't rushing your healing.",
+"Welcome home."
+];
+document.getElementById('gentleQuote').textContent=gentle[Math.floor(Math.random()*gentle.length)];
+
+
+function setTheme(mode){
+ const body=document.body;
+ const themes={
+  morning:'linear-gradient(180deg,#fff8e7,#f6e6c5)',
+  sunset:'linear-gradient(180deg,#f7d6b3,#d88b73)',
+  night:'linear-gradient(180deg,#172033,#2c3e67)',
+  forest:'linear-gradient(180deg,#d9ead3,#b7d0b8)'
+ };
+ body.style.background=themes[mode];
+ localStorage.setItem('apr_theme',mode);
+}
+const savedTheme=localStorage.getItem('apr_theme');
+if(savedTheme) setTheme(savedTheme);
+
+const coffee365=[
+"One quiet moment with God is never wasted.",
+"You don't have to earn peace.",
+"Thank you for coming back.",
+"I hope today surprises you with kindness.",
+"Keep your heart soft."
+];
+const coffeeBox=document.getElementById('coffeeMsg');
+if(coffeeBox) coffeeBox.textContent=coffee365[Math.floor(Math.random()*coffee365.length)];
+
+
+const lighthouse=[
+"If today felt heavy, let tonight be gentle.",
+"You don't have to fix everything before you rest.",
+"God is already in the tomorrow you're worried about.",
+"The smallest step forward is still forward.",
+"Be patient with yourself. Growth is usually quiet.",
+"Leave what you cannot carry at God's feet.",
+"Your heart deserves kindness too.",
+"Even slow healing is healing.",
+"You are not walking alone today.",
+"There is still beauty ahead."
+];
+function newLight(){
+ document.getElementById('lighthouseCard').textContent=
+ lighthouse[Math.floor(Math.random()*lighthouse.length)];
+}
+newLight();
+
 </script>
 </body>
 </html>
